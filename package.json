@@ -1,0 +1,17 @@
+{
+  "name": "image-ninja",
+  "version": "0.1.0",
+  "author": "StreetHub <hello@streethub.com>",
+  "description": "",
+  "dependencies": {
+    "bluebird": "^2.3.2",
+    "request": "^2.42.0"
+  },
+  "devDependencies": {
+    "chai": "^1.9.1",
+    "mocha": "^1.21.4"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/mocha"
+  }
+}
