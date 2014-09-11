@@ -127,6 +127,22 @@ describe ('ImageNinja', function () {
         });
     });
 
+    describe ('Crop', function () {
+        it ('should crop an image', function (done) {
+            var image = new Image(testImage);
+            image.crop(5, 5, 50, 50)
+                .save()
+                .then(function (croppedImage) {
+                    Image.identify(croppedImage).then(function (output) {
+                        output.should.match(/JPEG/);
+                        output.should.match(/50x50/);
+
+                        done();
+                    });
+                });
+        });
+    });
+
     after(function (done) {
         exec('rm -f /tmp/*.png /tmp/*.jpg', function () {
             done();
