@@ -1,3 +1,4 @@
+var Promise = require('bluebird');
 var chai = require('chai');
 var should = chai.should();
 var exec = require('child_process').exec;
@@ -205,6 +206,28 @@ describe ('ImageNinja', function () {
             mobilePreset.save();
 
             should.exist(Image.presets['mobile']);
+        });
+    });
+
+    describe ('Utilities', function () {
+        it ('should download a source image if a URL is provided', function (done) {
+            this.timeout(10000);
+
+            var image = new Image('http://www.mixmag.net/sites/default/files/imagecache/article/images/620x413-swedish-house-mafia1.jpg');
+            image.save()
+                .then(function (downloadedImage) {
+                    Promise.props({
+                        original: Image.identify(testImage),
+                        downloaded: Image.identify(downloadedImage)
+                    }).then(function (result) {
+                        var originalImage = /(JPEG.+sRGB)/.exec(result.original)[0];
+                        var downloadedImage = /(JPEG.+sRGB)/.exec(result.downloaded)[0];
+
+                        originalImage.should.equal(downloadedImage);
+
+                        done();
+                    });
+                });
         });
     });
 
