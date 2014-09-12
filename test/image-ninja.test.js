@@ -5,33 +5,52 @@ var exec = require('child_process').exec;
 
 var Image = require('../');
 
-var testImage = __dirname + '/fixtures/image.jpg';
+var testImage = {
+    path: __dirname + '/fixtures/image.jpg',
+    meta: null
+};
 
 describe ('ImageNinja', function () {
+    before (function (done) {
+        var image = new Image(testImage.path);
+        Image.identify(image).then(function (meta) {
+            testImage.meta = meta;
+            done();
+        });
+    });
+
     describe ('Convert', function () {
         it ('should convert image and save it to a temporary file', function (done) {
-            var image = new Image(testImage);
+            var image = new Image(testImage.path);
             image.format('png')
                 .save()
                 .then(function (convertedImage) {
                     convertedImage.path.should.match(/^\/tmp\//);
 
-                    Image.identify(convertedImage).then(function (output) {
-                        output.should.match(/PNG/);
+                    Image.identify(convertedImage).then(function (meta) {
+                        meta.width.should.equal(testImage.meta.width);
+                        meta.height.should.equal(testImage.meta.height);
+                        meta.format.should.equal('PNG');
+                        parseInt(meta.size).should.be.above(0);
+
                         done();
                     });
                 });
         });
 
         it ('should convert image and save it to a specified path', function (done) {
-            var image = new Image(testImage);
+            var image = new Image(testImage.path);
             image.format('png')
                 .save('/tmp/image.png')
                 .then(function (convertedImage) {
                     convertedImage.path.should.equal('/tmp/image.png');
 
-                    Image.identify(convertedImage).then(function (output) {
-                        output.should.match(/PNG/);
+                    Image.identify(convertedImage).then(function (meta) {
+                        meta.width.should.equal(testImage.meta.width);
+                        meta.height.should.equal(testImage.meta.height);
+                        meta.format.should.equal('PNG');
+                        parseInt(meta.size).should.be.above(0);
+
                         done();
                     });
                 });
@@ -40,13 +59,14 @@ describe ('ImageNinja', function () {
 
     describe ('Resize', function () {
         it ('should resize image to a specified width', function (done) {
-            var image = new Image(testImage);
+            var image = new Image(testImage.path);
             image.width(300)
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (output) {
-                        output.should.match(/JPEG/);
-                        output.should.match(/300x[0-9]+/);
+                    Image.identify(resizedImage).then(function (meta) {
+                        meta.width.should.equal(300);
+                        meta.format.should.equal('JPEG');
+                        parseInt(meta.size).should.be.above(0);
 
                         done();
                     });
@@ -54,13 +74,14 @@ describe ('ImageNinja', function () {
         });
 
         it ('should resize image to a specified height', function (done) {
-            var image = new Image(testImage);
+            var image = new Image(testImage.path);
             image.height(300)
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (output) {
-                        output.should.match(/JPEG/);
-                        output.should.match(/[0-9]+x300/);
+                    Image.identify(resizedImage).then(function (meta) {
+                        meta.height.should.equal(300);
+                        meta.format.should.equal('JPEG');
+                        parseInt(meta.size).should.be.above(0);
 
                         done();
                     });
@@ -68,14 +89,15 @@ describe ('ImageNinja', function () {
         });
 
         it ('should resize image to a specified width & height while preserving aspect ratio', function (done) {
-            var image = new Image(testImage);
+            var image = new Image(testImage.path);
             image.width(300)
                 .height(300)
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (output) {
-                        output.should.match(/JPEG/);
-                        output.should.match(/300x[0-9]+/);
+                    Image.identify(resizedImage).then(function (meta) {
+                        meta.width.should.equal(300);
+                        meta.format.should.equal('JPEG');
+                        parseInt(meta.size).should.be.above(0);
 
                         done();
                     });
@@ -83,15 +105,17 @@ describe ('ImageNinja', function () {
         });
 
         it ('should resize image to a specified width & height without preserving aspect ratio', function (done) {
-            var image = new Image(testImage);
+            var image = new Image(testImage.path);
             image.width(300)
                 .height(300)
                 .force()
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (output) {
-                        output.should.match(/JPEG/);
-                        output.should.match(/300x300/);
+                    Image.identify(resizedImage).then(function (meta) {
+                        meta.width.should.equal(300);
+                        meta.height.should.equal(300);
+                        meta.format.should.equal('JPEG');
+                        parseInt(meta.size).should.be.above(0);
 
                         done();
                     });
@@ -99,13 +123,14 @@ describe ('ImageNinja', function () {
         });
 
         it ('should resize image to a specified width & height using a resize method while preserving aspect ratio', function (done) {
-            var image = new Image(testImage);
+            var image = new Image(testImage.path);
             image.resize(300, 300)
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (output) {
-                        output.should.match(/JPEG/);
-                        output.should.match(/300x[0-9]+/);
+                    Image.identify(resizedImage).then(function (meta) {
+                        meta.width.should.equal(300);
+                        meta.format.should.equal('JPEG');
+                        parseInt(meta.size).should.be.above(0);
 
                         done();
                     });
@@ -113,14 +138,16 @@ describe ('ImageNinja', function () {
         });
 
         it ('should resize image to a specified width & height using a resize method without preserving aspect ratio', function (done) {
-            var image = new Image(testImage);
+            var image = new Image(testImage.path);
             image.resize(300, 300)
                 .force()
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (output) {
-                        output.should.match(/JPEG/);
-                        output.should.match(/300x300/);
+                    Image.identify(resizedImage).then(function (meta) {
+                        meta.width.should.equal(300);
+                        meta.height.should.equal(300);
+                        meta.format.should.equal('JPEG');
+                        parseInt(meta.size).should.be.above(0);
 
                         done();
                     });
@@ -130,13 +157,14 @@ describe ('ImageNinja', function () {
 
     describe ('Crop', function () {
         it ('should crop an image', function (done) {
-            var image = new Image(testImage);
+            var image = new Image(testImage.path);
             image.crop(5, 5, 50, 50)
                 .save()
                 .then(function (croppedImage) {
-                    Image.identify(croppedImage).then(function (output) {
-                        output.should.match(/JPEG/);
-                        output.should.match(/50x50/);
+                    Image.identify(croppedImage).then(function (meta) {
+                        meta.width.should.equal(50);
+                        meta.height.should.equal(50);
+                        meta.format.should.equal('JPEG');
 
                         done();
                     });
@@ -211,19 +239,22 @@ describe ('ImageNinja', function () {
 
     describe ('Utilities', function () {
         it ('should download a source image if a URL is provided', function (done) {
-            this.timeout(10000);
+            this.timeout(20000);
 
             var image = new Image('http://www.mixmag.net/sites/default/files/imagecache/article/images/620x413-swedish-house-mafia1.jpg');
             image.save()
                 .then(function (downloadedImage) {
                     Promise.props({
-                        original: Image.identify(testImage),
+                        original: Image.identify(testImage.path),
                         downloaded: Image.identify(downloadedImage)
-                    }).then(function (result) {
-                        var originalImage = /(JPEG.+sRGB)/.exec(result.original)[0];
-                        var downloadedImage = /(JPEG.+sRGB)/.exec(result.downloaded)[0];
+                    }).then(function (results) {
+                        var original = results.original;
+                        var downloaded = results.downloaded;
 
-                        originalImage.should.equal(downloadedImage);
+                        downloaded.width.should.equal(original.width);
+                        downloaded.height.should.equal(original.height);
+                        downloaded.format.should.equal(original.format);
+                        parseInt(downloaded.size).should.be.above(0);
 
                         done();
                     });
