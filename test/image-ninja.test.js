@@ -237,6 +237,44 @@ describe ('ImageNinja', function () {
         });
     });
 
+    describe ('Filters', function () {
+        var monoFilter;
+
+        it ('should define a filter', function () {
+            monoFilter = Image.filter('mono');
+            monoFilter.exec(function () {
+                var image = new Image(this.path);
+                image.set('-type', 'Grayscale');
+                return image.save();
+            });
+
+            monoFilter.name.should.equal('mono');
+            monoFilter.handler.should.be.instanceof(Function);
+        });
+
+        it ('should use a filter', function (done) {
+            var image = new Image(testImage.path);
+            image.use(monoFilter)
+                .save()
+                .then(function (monoImage) {
+                    Image.identify(monoImage).then(function (meta) {
+                        meta.width.should.equal(testImage.meta.width);
+                        meta.height.should.equal(testImage.meta.height);
+                        meta.format.should.equal(testImage.meta.format);
+                        parseInt(meta.size).should.be.above(0);
+
+                        done();
+                    });
+                });
+        });
+
+        it ('should save a filter', function () {
+            monoFilter.save();
+
+            should.exist(Image.filters['mono']);
+        });
+    });
+
     describe ('Utilities', function () {
         it ('should download a source image if a URL is provided', function (done) {
             this.timeout(20000);
