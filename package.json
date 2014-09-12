@@ -4,8 +4,8 @@
   "author": "StreetHub <hello@streethub.com>",
   "description": "",
   "dependencies": {
-    "bluebird": "^2.3.2",
-    "request": "^2.42.0"
+    "bluebird": "2.3.2",
+    "request": "2.42.0"
   },
   "devDependencies": {
     "chai": "^1.9.1",
