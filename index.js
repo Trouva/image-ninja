@@ -1,1 +1,1 @@
-module.exports = require('./lib/image-ninja');
+module.exports = require('./lib/image');
