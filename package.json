@@ -2,7 +2,7 @@
   "name": "image-ninja",
   "version": "0.1.0",
   "author": "StreetHub <hello@streethub.com>",
-  "description": "",
+  "description": "Simple & extendable image processing library",
   "dependencies": {
     "bluebird": "2.3.2",
     "request": "2.42.0"
