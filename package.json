@@ -1,6 +1,6 @@
 {
   "name": "image-ninja",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "author": "StreetHub <hello@streethub.com>",
   "description": "Simple & extendable image processing library",
   "dependencies": {
