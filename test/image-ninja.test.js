@@ -13,6 +13,7 @@ var testImage = {
 describe ('ImageNinja', function () {
     before (function (done) {
         var image = new Image(testImage.path);
+        image.name.should.equal('image.jpg');
         Image.identify(image).then(function (meta) {
             testImage.meta = meta;
             done();
@@ -44,6 +45,7 @@ describe ('ImageNinja', function () {
                 .save('/tmp/image.png')
                 .then(function (convertedImage) {
                     convertedImage.path.should.equal('/tmp/image.png');
+                    convertedImage.name.should.equal('image.png');
 
                     Image.identify(convertedImage).then(function (meta) {
                         meta.width.should.equal(testImage.meta.width);
@@ -206,7 +208,7 @@ describe ('ImageNinja', function () {
         });
 
         it ('should use a preset', function () {
-            var image = new Image(testImage);
+            var image = new Image(testImage.path);
             image.width(300)
                 .height(300);
 
@@ -280,6 +282,7 @@ describe ('ImageNinja', function () {
             this.timeout(20000);
 
             var image = new Image('http://www.mixmag.net/sites/default/files/imagecache/article/images/620x413-swedish-house-mafia1.jpg');
+            image.name.should.equal('620x413-swedish-house-mafia1.jpg');
             image.save()
                 .then(function (downloadedImage) {
                     Promise.props({
