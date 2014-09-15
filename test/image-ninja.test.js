@@ -32,7 +32,7 @@ describe ('ImageNinja', function () {
                         meta.width.should.equal(testImage.meta.width);
                         meta.height.should.equal(testImage.meta.height);
                         meta.format.should.equal('PNG');
-                        parseInt(meta.size).should.be.above(0);
+                        meta.size.should.be.above(0);
 
                         done();
                     });
@@ -51,7 +51,7 @@ describe ('ImageNinja', function () {
                         meta.width.should.equal(testImage.meta.width);
                         meta.height.should.equal(testImage.meta.height);
                         meta.format.should.equal('PNG');
-                        parseInt(meta.size).should.be.above(0);
+                        meta.size.should.be.above(0);
 
                         done();
                     });
@@ -68,7 +68,7 @@ describe ('ImageNinja', function () {
                     Image.identify(resizedImage).then(function (meta) {
                         meta.width.should.equal(300);
                         meta.format.should.equal('JPEG');
-                        parseInt(meta.size).should.be.above(0);
+                        meta.size.should.be.above(0);
 
                         done();
                     });
@@ -83,7 +83,7 @@ describe ('ImageNinja', function () {
                     Image.identify(resizedImage).then(function (meta) {
                         meta.height.should.equal(300);
                         meta.format.should.equal('JPEG');
-                        parseInt(meta.size).should.be.above(0);
+                        meta.size.should.be.above(0);
 
                         done();
                     });
@@ -99,7 +99,7 @@ describe ('ImageNinja', function () {
                     Image.identify(resizedImage).then(function (meta) {
                         meta.width.should.equal(300);
                         meta.format.should.equal('JPEG');
-                        parseInt(meta.size).should.be.above(0);
+                        meta.size.should.be.above(0);
 
                         done();
                     });
@@ -117,7 +117,7 @@ describe ('ImageNinja', function () {
                         meta.width.should.equal(300);
                         meta.height.should.equal(300);
                         meta.format.should.equal('JPEG');
-                        parseInt(meta.size).should.be.above(0);
+                        meta.size.should.be.above(0);
 
                         done();
                     });
@@ -132,7 +132,7 @@ describe ('ImageNinja', function () {
                     Image.identify(resizedImage).then(function (meta) {
                         meta.width.should.equal(300);
                         meta.format.should.equal('JPEG');
-                        parseInt(meta.size).should.be.above(0);
+                        meta.size.should.be.above(0);
 
                         done();
                     });
@@ -149,7 +149,7 @@ describe ('ImageNinja', function () {
                         meta.width.should.equal(300);
                         meta.height.should.equal(300);
                         meta.format.should.equal('JPEG');
-                        parseInt(meta.size).should.be.above(0);
+                        meta.size.should.be.above(0);
 
                         done();
                     });
@@ -263,7 +263,7 @@ describe ('ImageNinja', function () {
                         meta.width.should.equal(testImage.meta.width);
                         meta.height.should.equal(testImage.meta.height);
                         meta.format.should.equal(testImage.meta.format);
-                        parseInt(meta.size).should.be.above(0);
+                        meta.size.should.be.above(0);
 
                         done();
                     });
@@ -295,7 +295,7 @@ describe ('ImageNinja', function () {
                         downloaded.width.should.equal(original.width);
                         downloaded.height.should.equal(original.height);
                         downloaded.format.should.equal(original.format);
-                        parseInt(downloaded.size).should.be.above(0);
+                        downloaded.size.should.be.above(0);
 
                         done();
                     });
