@@ -17,7 +17,7 @@ describe ('ImageNinja', function () {
         Image.identify(image).then(function (meta) {
             testImage.meta = meta;
             done();
-        });
+        }).catch(done);
     });
 
     describe ('Convert', function () {
@@ -28,7 +28,7 @@ describe ('ImageNinja', function () {
                 .then(function (convertedImage) {
                     convertedImage.path.should.match(/^\/tmp\//);
 
-                    Image.identify(convertedImage).then(function (meta) {
+                    return Image.identify(convertedImage).then(function (meta) {
                         meta.width.should.equal(testImage.meta.width);
                         meta.height.should.equal(testImage.meta.height);
                         meta.format.should.equal('PNG');
@@ -36,7 +36,8 @@ describe ('ImageNinja', function () {
 
                         done();
                     });
-                });
+                })
+                .catch(done);
         });
 
         it ('should convert image and save it to a specified path', function (done) {
@@ -47,7 +48,7 @@ describe ('ImageNinja', function () {
                     convertedImage.path.should.equal('/tmp/image.png');
                     convertedImage.name.should.equal('image.png');
 
-                    Image.identify(convertedImage).then(function (meta) {
+                    return Image.identify(convertedImage).then(function (meta) {
                         meta.width.should.equal(testImage.meta.width);
                         meta.height.should.equal(testImage.meta.height);
                         meta.format.should.equal('PNG');
@@ -55,7 +56,8 @@ describe ('ImageNinja', function () {
 
                         done();
                     });
-                });
+                })
+                .catch(done);
         });
     });
 
@@ -65,14 +67,15 @@ describe ('ImageNinja', function () {
             image.width(300)
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (meta) {
+                    return Image.identify(resizedImage).then(function (meta) {
                         meta.width.should.equal(300);
                         meta.format.should.equal('JPEG');
                         meta.size.should.be.above(0);
 
                         done();
                     });
-                });
+                })
+                .catch(done);
         });
 
         it ('should resize image to a specified height', function (done) {
@@ -80,14 +83,15 @@ describe ('ImageNinja', function () {
             image.height(300)
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (meta) {
+                    return Image.identify(resizedImage).then(function (meta) {
                         meta.height.should.equal(300);
                         meta.format.should.equal('JPEG');
                         meta.size.should.be.above(0);
 
                         done();
                     });
-                });
+                })
+                .catch(done);
         });
 
         it ('should resize image to a specified width & height while preserving aspect ratio', function (done) {
@@ -96,14 +100,52 @@ describe ('ImageNinja', function () {
                 .height(300)
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (meta) {
+                    return Image.identify(resizedImage).then(function (meta) {
                         meta.width.should.equal(300);
                         meta.format.should.equal('JPEG');
                         meta.size.should.be.above(0);
 
                         done();
                     });
-                });
+                })
+                .catch(done);
+        });
+
+        it ('should resize image to a specified width & height while preserving aspect ratio and fitting into boundaries using clip strategy', function (done) {
+            var image = new Image(testImage.path);
+            image.width(300)
+                .height(250)
+                .fit('clip')
+                .save()
+                .then(function (resizedImage) {
+                    return Image.identify(resizedImage).then(function (meta) {
+                        meta.width.should.equal(300);
+                        meta.height.should.equal(250);
+                        meta.format.should.equal('JPEG');
+                        meta.size.should.be.above(0);
+
+                        done();
+                    });
+                }).catch(done);
+        });
+
+        it ('should resize image to a specified width & height while preserving aspect ratio and fitting into boundaries using crop strategy', function (done) {
+            var image = new Image(testImage.path);
+            image.width(300)
+                .height(250)
+                .fit('crop')
+                .save()
+                .then(function (resizedImage) {
+                    return Image.identify(resizedImage).then(function (meta) {
+                        meta.width.should.equal(300);
+                        meta.height.should.equal(250);
+                        meta.format.should.equal('JPEG');
+                        meta.size.should.be.above(0);
+
+                        done();
+                    });
+                })
+                .catch(done);
         });
 
         it ('should resize image to a specified width & height without preserving aspect ratio', function (done) {
@@ -113,7 +155,7 @@ describe ('ImageNinja', function () {
                 .force()
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (meta) {
+                    return Image.identify(resizedImage).then(function (meta) {
                         meta.width.should.equal(300);
                         meta.height.should.equal(300);
                         meta.format.should.equal('JPEG');
@@ -121,7 +163,8 @@ describe ('ImageNinja', function () {
 
                         done();
                     });
-                });
+                })
+                .catch(done);
         });
 
         it ('should resize image to a specified width & height using a resize method while preserving aspect ratio', function (done) {
@@ -129,14 +172,15 @@ describe ('ImageNinja', function () {
             image.resize(300, 300)
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (meta) {
+                    return Image.identify(resizedImage).then(function (meta) {
                         meta.width.should.equal(300);
                         meta.format.should.equal('JPEG');
                         meta.size.should.be.above(0);
 
                         done();
                     });
-                });
+                })
+                .catch(done);
         });
 
         it ('should resize image to a specified width & height using a resize method without preserving aspect ratio', function (done) {
@@ -145,7 +189,7 @@ describe ('ImageNinja', function () {
                 .force()
                 .save()
                 .then(function (resizedImage) {
-                    Image.identify(resizedImage).then(function (meta) {
+                    return Image.identify(resizedImage).then(function (meta) {
                         meta.width.should.equal(300);
                         meta.height.should.equal(300);
                         meta.format.should.equal('JPEG');
@@ -153,7 +197,8 @@ describe ('ImageNinja', function () {
 
                         done();
                     });
-                });
+                })
+                .catch(done);
         });
     });
 
@@ -163,14 +208,15 @@ describe ('ImageNinja', function () {
             image.crop(5, 5, 50, 50)
                 .save()
                 .then(function (croppedImage) {
-                    Image.identify(croppedImage).then(function (meta) {
+                    return Image.identify(croppedImage).then(function (meta) {
                         meta.width.should.equal(50);
                         meta.height.should.equal(50);
                         meta.format.should.equal('JPEG');
 
                         done();
                     });
-                });
+                })
+                .catch(done);
         });
     });
 
@@ -259,7 +305,7 @@ describe ('ImageNinja', function () {
             image.use(monoFilter)
                 .save()
                 .then(function (monoImage) {
-                    Image.identify(monoImage).then(function (meta) {
+                    return Image.identify(monoImage).then(function (meta) {
                         meta.width.should.equal(testImage.meta.width);
                         meta.height.should.equal(testImage.meta.height);
                         meta.format.should.equal(testImage.meta.format);
@@ -267,7 +313,8 @@ describe ('ImageNinja', function () {
 
                         done();
                     });
-                });
+                })
+                .catch(done);
         });
 
         it ('should save a filter', function () {
@@ -285,7 +332,7 @@ describe ('ImageNinja', function () {
             image.name.should.equal('620x413-swedish-house-mafia1.jpg');
             image.save()
                 .then(function (downloadedImage) {
-                    Promise.props({
+                    return Promise.props({
                         original: Image.identify(testImage.path),
                         downloaded: Image.identify(downloadedImage)
                     }).then(function (results) {
@@ -299,7 +346,8 @@ describe ('ImageNinja', function () {
 
                         done();
                     });
-                });
+                })
+                .catch(done);
         });
     });
 
